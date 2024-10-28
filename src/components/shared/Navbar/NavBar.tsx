@@ -18,7 +18,7 @@ export default function DashboardPage() {
   return (
     <>
       
-      <div className="hidden flex-col md:flex">
+      <div className=" flex-col flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <div className="ml-auto flex items-center space-x-4">

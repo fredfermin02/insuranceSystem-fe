@@ -1,7 +1,11 @@
-import React from 'react'
 
-export default function page() {
+
+export default function Page() {
+  
+
   return (
-    <div>page</div>
-  )
+    <div className="flex gap-8 flex-wrap">
+      <h1>DASHBOARD</h1>
+    </div>
+  );  
 }
