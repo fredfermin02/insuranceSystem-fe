@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { AgentSale } from "@/components/shared/table/ColumnsForAgents";
+
 import {
   Dialog,
   DialogContent,
@@ -20,8 +20,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MoreHorizontal } from "lucide-react";
+import { SaleData } from "@/interfaces/ISaleData";
+import AgentSaleForm from "../forms/AgentSaleForm";
 
-export function EditButtonDropdown({ payment, onEditClick }: { payment: AgentSale, onEditClick: (payment: AgentSale) => void }) {
+export function EditButtonDropdown({ payment, onEditClick }: { payment: SaleData, onEditClick: (payment: SaleData) => void }) {
     return (
       <Dialog>
         <DropdownMenu>
@@ -55,90 +57,9 @@ export function EditButtonDropdown({ payment, onEditClick }: { payment: AgentSal
               Make changes to your profile here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 items-center gap-4">
-              <div>
-                <Label htmlFor="producerName" className="text-right">
-                  Producer Name
-                </Label>
-                <Input id="producerName" defaultValue={payment.producerName} className="col-span-3" />
-              </div>
-  
-              <div>
-                <Label htmlFor="producerNpn" className="text-right">
-                  Producer NPN
-                </Label>
-                <Input id="producerNpn" defaultValue={payment.producernpn} className="col-span-3" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 items-center gap-4">
-              <div>
-                <Label htmlFor="MemberId" className="text-right">
-                  Member ID
-                </Label>
-                <Input id="MemberId" defaultValue={payment.memberid} className="col-span-3" />
-              </div>
-  
-              <div>
-                <Label htmlFor="suscriberName" className="text-right">
-                  Suscriber Name
-                </Label>
-                <Input id="suscriberName" defaultValue={payment.suscribername} className="col-span-3" />
-              </div>
-            </div>
-            <div className="flex flex-row items-center  gap-4">
-              <div>
-                <Label htmlFor="lives" className="text-right">
-                  Lives
-                </Label>
-                <div className="flex flex-row items-center gap-4">
-                  <div>
-                    <Input id="lives" defaultValue={payment.lives} className="col-span-3" />
-                  </div>
-                  <div>
-                    <Label>x</Label>
-                  </div>
-                </div>
-              </div>
-  
-              <div>
-                <Label htmlFor="rate" className="text-right">
-                  Rate
-                </Label>
-                <div className="flex flex-row items-center gap-4">
-                  <div>
-                    <Input id="rate" defaultValue={payment.rate} className="col-span-3" />
-                  </div>
-                  <div>
-                    <Label>=</Label>
-                  </div>
-                </div>
-              </div>
-  
-              <div>
-                <Label htmlFor="commission" className="text-right">
-                  Commission
-                </Label>
-                <Input id="commission" defaultValue={payment.commission} className="col-span-3" />
-              </div>
-            </div>
-  
-            <div>
-              <Label htmlFor="commissionMonth" className="text-right">
-                Commission Month
-              </Label>
-              <Input id="commissionMonth" defaultValue={payment.commissionmonth} className="col-span-3" />
-            </div>
-  
-            <div>
-              <Label htmlFor="blockReason" className="text-right">
-                Block Reason
-              </Label>
-              <Input id="blockReason" defaultValue={payment.blockreason} className="col-span-3" />
-            </div>
-          </div>
+          <AgentSaleForm saleData={payment}/>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            
           </DialogFooter>
         </DialogContent>
       </Dialog>

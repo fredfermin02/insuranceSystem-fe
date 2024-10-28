@@ -4,24 +4,18 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
  
 import { Button } from "@/components/ui/button"
+import { EditButtonDropdown } from "./EditButtonDropdown";
+import React from "react";
+import { SaleData } from "@/interfaces/ISaleData";
+import { format } from "date-fns";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type AgentSale = {
-  status: string,
-  producerName: string,
-  producernpn: string,
-  memberid: string,
-  suscribername: string,
-  state: string,
-  lives: number,
-  rate: string,
-  commission: string,
-  commissionmonth: string,
-  blockreason: string
-};
 
-export const columnsForAgents: ColumnDef<AgentSale>[] = [
+
+
+
+export const columnsForAgents: ColumnDef<SaleData>[] = [
   {
     accessorKey: "status",
     header: "Status",
@@ -72,12 +66,32 @@ export const columnsForAgents: ColumnDef<AgentSale>[] = [
   {
     accessorKey: "commissionmonth",
     header: "Commission Month",
+    cell: ({ row }) => {
+      const commissionMonth: Date = row.getValue("commissionmonth"); // Get the blockreason value
+      return format(commissionMonth, "PPP");
+    }
   },
   {
     accessorKey: "blockreason",
     header: "Block Reason",
   },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      
+      const [selectedPayment, setSelectedPayment] = React.useState<any>(null);
+      const handleEditClick = (payment: SaleData) => {
+        setSelectedPayment(payment); // Store the selected row's data
+      };
 
+      return (
+        <div className="justify-center">
+          <EditButtonDropdown payment={row.original} onEditClick={handleEditClick}/>
+        </div>
+        
+      )
+    },
+  } 
 ]
 
 // {

@@ -33,7 +33,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { EditButtonDropdown } from "../shared/table/EditButtonDropdown"
-import { AgentSale } from "../shared/table/ColumnsForAgents"
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -41,19 +41,16 @@ interface DataTableProps<TData, TValue> {
 }
 
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData , TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [selectedPayment, setSelectedPayment] = React.useState<any>(null);
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
 
-  const handleEditClick = (payment: AgentSale) => {
-    setSelectedPayment(payment); // Store the selected row's data
-  };
+  
 
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -74,8 +71,8 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="rounded-md border">
+    <div className="">
+      <div className="rounded-md border ">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -99,9 +96,7 @@ export function DataTable<TData, TValue>({
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
-                  {/* <TableCell>
-                    <EditButtonDropdown payment={row.original} onEditClick={handleEditClick} />
-                  </TableCell> */}
+                  
                 </TableRow>
               ))
             ) : (

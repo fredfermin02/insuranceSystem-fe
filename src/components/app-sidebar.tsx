@@ -20,11 +20,11 @@ import { Collapsible,
 
 import Link from "next/link";
 // This is sample data.
-const data = {
+export const sidebar = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Monitoring Center",
+      title: "Monitoring2 Center",
       url: "/dashboard",
       items: [
         {
@@ -52,16 +52,16 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar {...props}>
+    <Sidebar className="z-40" {...props}>
       <SidebarHeader>
         <h1 className="justify-center align-middle font-bold self-center text">Monitoring Center</h1>
 
       </SidebarHeader>
       <SidebarContent className="gap-0">
         {/* We create a collapsible SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {sidebar.navMain.map((item,index) => (
           <Collapsible
-            key={item.title}
+            key={index}
             title={item.title}
             defaultOpen
             className="group/collapsible"
@@ -79,8 +79,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <CollapsibleContent>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {item.items.map((subItem) => (
-                      <SidebarMenuItem key={item.title}>
+                    {item.items.map((subItem,index) => (
+                      <SidebarMenuItem key={index}>
                         <SidebarMenuButton asChild>
                         <Link href={subItem.url}>{subItem.title}</Link>
                         </SidebarMenuButton>

@@ -136,15 +136,15 @@ export default  function Page() {
   };
 
   return (
-    <div className="h-screen  justify-center">
+    <div className="justify-center  ">
       {/* Wrap your form with FormProvider */}
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full justify-center p-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="justify-center p-4">
           <Dropzone name="file" onUpload={handleSubmit(onSubmit)} />
         </form>
       </FormProvider>
 
-      <div className="container mx-auto py-10 ">
+      <div className="mx-auto py-10 ">
       <DataTable columns={columnsForFileUpload} data={data} />
     </div>
 

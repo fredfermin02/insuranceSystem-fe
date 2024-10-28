@@ -1,3 +1,4 @@
+'use client'
 import { AppSidebar } from "@/components/app-sidebar"
 import { DynamicBreadcrumbs } from "@/components/shared/Navbar/DynamicBreadcrumbs";
 import { Separator } from "@/components/ui/separator"
@@ -6,8 +7,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-
-
+import { useAppSelector } from "@/redux/store";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardLayout({
   children, 
@@ -15,42 +17,29 @@ export default function DashboardLayout({
   children: React.ReactNode;
   breadcrumbs: React.ReactNode;
 }) {
-  return (
+  const authState = useAppSelector((state)=>state.auth.authState)
+    useEffect(() => {
+      if (!authState) {
+        redirect("/auth");
+      }
+    }, []);
 
-    
-    
+  return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex sticky top-0 bg-white h-16 shrink-0 items-center gap-2 border-b px-4 dark:bg-neutral-950">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          {/* Render dynamic breadcrumbs */}
-          <DynamicBreadcrumbs />
-          {/* <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb> */}
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          {children}
-        </div>
+        <main className="">
+          <header className="flex sticky top-0 bg-white h-16 shrink-0 items-center gap-2 border-b px-4 dark:bg-neutral-950 z-10">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <DynamicBreadcrumbs />
+          </header>
+          {/* Make only the content scrollable */}
+          <div className="p-4 max-w-[100vw]">
+            {children}
+          </div>
+        </main>
       </SidebarInset>
     </SidebarProvider>
-      
-
-      
-      
-    
-
   );
 }
