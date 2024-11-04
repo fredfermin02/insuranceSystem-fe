@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 import { ChevronRight } from "lucide-react"
 import {
@@ -12,45 +13,49 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "./ui/sidebar"
-import { SearchForm } from "./search-form"
-import { VersionSwitcher } from "./version-switcher"
 import { Collapsible,
   CollapsibleContent,
   CollapsibleTrigger, } from "./ui/collapsible"
 
 import Link from "next/link";
+import useAuthUser from "@/hooks/use-auth-user"
+
 // This is sample data.
-export const sidebar = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-  navMain: [
-    {
-      title: "Monitoring2 Center",
-      url: "/dashboard",
-      items: [
-        {
-          title: "File Upload",
-          url: "/dashboard/fileupload",
-        },
-        {
-          title: "Agents",
-          url: "/dashboard/agents",
-        },
-      ],
-    },
-    {
-      title: "Community",
-      url: "#",
-      items: [
-        {
-          title: "Contribution Guide",
-          url: "#",
-        },
-      ],
-    },
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const sidebar = {
+    versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
+    navMain: [
+      {
+        title: "Monitoring2 Center",
+        url: "/dashboard",
+        items: [
+          {
+            title: "Agents",
+            url: "/dashboard/agents",
+          },
+        ],
+      },
+      {
+        title: "Community",
+        url: "#",
+        items: [
+          {
+            title: "Contribution Guide",
+            url: "#",
+          },
+        ],
+      },
+    ],
+  }
+  const user = useAuthUser();
+  if (user?.isAdmin) {
+    sidebar.navMain[0].items.push({
+      title: "File Upload",
+      url: "/dashboard/fileupload",
+    })
+  }
+
   return (
     <Sidebar className="z-40" {...props}>
       <SidebarHeader>
@@ -82,7 +87,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     {item.items.map((subItem,index) => (
                       <SidebarMenuItem key={index}>
                         <SidebarMenuButton asChild>
-                        <Link href={subItem.url}>{subItem.title}</Link>
+                          
+                          <Link href={subItem.url} >{subItem.title}</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}

@@ -2,8 +2,7 @@
 
 import localFont from "next/font/local";
 import "./globals.css";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import ConfigureAmplifyClientSide from "./amplify-cognito-config";
 
 
 const geistSans = localFont({
@@ -30,9 +29,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable}  antialiased `}
       >
-        <Provider store={store}>
-          {children}
-        </Provider>
+        <>
+          
+          
+            <ConfigureAmplifyClientSide/>
+            {children}
+          
+        </>
+        
       </body>
     </html>
   );

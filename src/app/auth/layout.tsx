@@ -1,8 +1,3 @@
-'use client'
-
-import { useAppSelector } from "@/redux/store"
-import { redirect } from "next/navigation";
-import { useEffect, useLayoutEffect } from "react";
 
 
 export default function AuthLayout({
@@ -10,17 +5,22 @@ export default function AuthLayout({
   }: {
     children: React.ReactNode
   }) {
-    const authState = useAppSelector((state)=>state.auth.authState);
-    useLayoutEffect(() => {
-      if (authState) {
-        redirect("/dashboard");
-      }
-    }, []);
+
     return (
-      <section>
-        {/* Include shared UI here e.g. a header or sidebar */}
-   
+      <section className="h-screen w-screen flex flex-col justify-center items-center bg-background md:grid md:grid-cols-2">
+      
+      
+      {/* Block that shows only on large screens */}
+      <div className="hidden md:flex bg-primary items-center justify-center h-full w-full">
+        {/* Content inside the block */}
+        <h2 className="text-white text-4xl font-bold px-10">Welcome to Monitoring Center</h2>
+      </div>
+      
+      <div className="flex  justify-center  ">
+        
         {children}
-      </section>
+        
+      </div>
+    </section>
     )
   }

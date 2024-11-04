@@ -1,93 +1,115 @@
-"use client";
+"use client"
 
 import * as React from "react";
-
-import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Icons } from "@/components/icons";
 import { useForm } from "react-hook-form";
-import { TextField } from "@/components/auth";
+
+import { handleSignIn, handleSignOut } from "@/lib/cognitoActions";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { getErrorMessage } from "@/utils/get-error-message";
+import { useFormState } from "react-dom";
+import { toast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { useRouter } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-type FormData = {
-  loginEmail: string;
-  loginPassword: string;
-};
+
+
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const {
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm<FormData>();
+  const router = useRouter()
+  const formSchema = z.object({
+    email: z.string().email({ message: "Email is required" }),
+    password: z.string().min(1, { message: 'Password is required' })
+  });
   
-  const onSubmit = handleSubmit(async (data: FormData) => {
-    // await handleLogin({ email: data.loginEmail, password: data.loginPassword });
-    console.log({ email: data.loginEmail, password: data.loginPassword })
-
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-    const [isShow, setIsShow] = React.useState<boolean>(false);
-
-    function showPassword(): void {
-      setIsShow(!isShow);
-      console.log(isShow);
-    }
-
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.set("email", values.email);
+    formData.set("password", values.password);
+  
+    handleSignIn(undefined, formData)
+      .then(() => {
+        router.push("/dashboard");
+        
+      })
+      .catch((error) => {
+        toast({
+          variant: "destructive",
+          title: 'Error',
+          description: getErrorMessage(error),
+        })
+      })
+      setIsLoading(false)
+    console.log(values)
+  }
+  
   return (
-    <div className={cn("grid gap-6  w-full md:w-1/2", className)} {...props}>
-      <div className="flex flex-col space-y-2 text-center ">
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome back!</h1>
+    <div className={cn("grid gap-6 ", className)} {...props}>
+      <Toaster/>
+      <div className="flex flex-col md:w-96 space-y-2 text-center">
+        <h1 className="text-2xl  font-semibold tracking-tight">
+          Welcome Back
+        </h1>
+
       </div>
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-1">
-            
-          
-            <TextField
-            control={control}
-            error={errors?.loginEmail?.message}
-            type={'email'}
-            placeHolder="E-mail"
-            name="loginEmail"
-            rule={{
-              required: 'Email is required',
-            }}
+ 
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem >
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" autoComplete="mobile email" placeholder="example@ex.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+         
+         
+          <Button className="flex w-full" type="submit" disabled={isLoading}>{isLoading ? (
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <div>Sumbit</div>
+        )}</Button>
           
-          </div>
-
-          <div className="grid gap-1">
-            
-            <TextField
-              control={control}
-              error={errors?.loginPassword?.message}
-              type={isShow ? 'text' : 'password'}
-              placeHolder="Password"
-              name="loginPassword"
-              rule={{
-                required: 'Password is required',
-              }}
-            />
-          </div>
-
-          <Button disabled={isLoading}>
-            {/* {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )} */}
-            Login
-          </Button>
-        </div>
-      </form>
+        </form>
+      </Form>
+      
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -104,7 +126,6 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
         ) : (
           <Icons.google className="mr-2 h-4 w-4" />
         )}{" "}
-        Google
       </Button>
     </div>
   );
