@@ -1,20 +1,16 @@
 'use client'
-import React, {  useState, type ReactElement } from 'react';
+import React, {  useEffect, useState, type ReactElement } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserLoginForm } from './components/loginForms';
 import { UserSignupForm } from './components/singupForm';
-
-
-
-
-
-
 
 const authPage = (): ReactElement => {
 const [showLogin, setShowLogin] = useState<Boolean>(false)
 const toggleLogin =()=>{
     setShowLogin(!showLogin)
 }
+
+
 
   return (
     <section>

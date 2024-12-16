@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
 
   const isOnDashboard = request.nextUrl.pathname.startsWith("/dashboard");
   const isOnAdminArea =
-    request.nextUrl.pathname.startsWith("/dashboard/admins");
+    request.nextUrl.pathname.startsWith("/dashboard/fileupload");
 
   if (isOnDashboard) {
     if (!user)

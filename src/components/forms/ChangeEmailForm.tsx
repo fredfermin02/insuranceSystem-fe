@@ -25,7 +25,7 @@ import { useFormState } from "react-dom";
 import {
   handleConfirmUserAttribute,
   handleUpdateUserAttribute,
-} from "@/lib/cognitoActions";
+} from "@/lib/aws/cognitoActions";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@/utils/get-error-message";
 

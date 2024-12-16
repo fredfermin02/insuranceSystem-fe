@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { useForm } from "react-hook-form";
-import { handleSignUp } from "@/lib/cognitoActions";
-import { toast, useToast } from "@/hooks/use-toast"
+import { handleSignUp } from "@/lib/aws/cognitoActions";
+import { toast} from "@/hooks/use-toast"
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 
-import { handleSignIn, handleSignOut } from "@/lib/cognitoActions";
+import { handleSignIn, handleSignOut } from "@/lib/aws/cognitoActions";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";

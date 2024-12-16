@@ -1,100 +1,50 @@
-'use client'
+"use client";
 
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Dropzone from "./components/UploadExcel";
+// import Dropzone from "./components/UploadExcel";
 import { DataTable } from "@/components/ui/Data-Table";
-import { columnsForAgents  } from "@/components/shared/table/ColumnsForAgents";
-import { columnsForFileUpload, FileUpload } from "@/components/shared/table/ColumnsForFilepload";
-//Get data for table
+import {
+  columnsForFileUpload,
+  FileUpload,
+} from "@/components/shared/table/ColumnsForFilepload";
+import useUserSession from "@/hooks/use-authuser-token";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+
+import {
+  S3Client,
+  PutObjectCommand,
+  CreateBucketCommand,
+} from "@aws-sdk/client-s3";
+import { stringify } from "querystring";
+import { Button } from "@/components/ui/button";
+import { getErrorMessage } from "@/utils/get-error-message";
+import { on } from "events";
+
+import { FileUploader } from "./components/UploadExcel";
+import { Toaster } from "@/components/ui/sonner";
+import { useState } from "react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "sonner";
+import { uploadFileToS3 } from "@/lib/aws/s3Actions";
+import UploadDialogForm from "./components/UploadDialogForm";
+import { useQuery } from "@tanstack/react-query";
+import { useUploadedAdminFiles } from "@/hooks/useFileUploadData";
+import { IFileUpload } from "@/interfaces";
 
 
-function getData(): FileUpload[] {
-  // Fetch data from your API here.
-  return [
-    {
-      uploadDate: "2024-01-15",
-      fileName: "report_jan_2024.pdf",
-      year: "2024",
-      month: "January",
-      user: "John Doe",
-      status: "Completed"
-    },
-    {
-      uploadDate: "2024-02-10",
-      fileName: "sales_feb_2024.xlsx",
-      year: "2024",
-      month: "February",
-      user: "Jane Smith",
-      status: "Pending"
-    },
-    {
-      uploadDate: "2024-03-22",
-      fileName: "project_plan_mar_2024.docx",
-      year: "2024",
-      month: "March",
-      user: "Mike Ross",
-      status: "In Progress"
-    },
-    {
-      uploadDate: "2024-04-05",
-      fileName: "invoice_apr_2024.pdf",
-      year: "2024",
-      month: "April",
-      user: "Alice Johnson",
-      status: "Completed"
-    },
-    {
-      uploadDate: "2024-05-18",
-      fileName: "budget_may_2024.xlsx",
-      year: "2024",
-      month: "May",
-      user: "Bob Brown",
-      status: "Failed"
-    },
-    {
-      uploadDate: "2024-06-12",
-      fileName: "presentation_jun_2024.pptx",
-      year: "2024",
-      month: "June",
-      user: "Sarah Connor",
-      status: "Pending"
-    },
-    {
-      uploadDate: "2024-07-09",
-      fileName: "contract_jul_2024.pdf",
-      year: "2024",
-      month: "July",
-      user: "David Johnson",
-      status: "Completed"
-    },
-    {
-      uploadDate: "2024-08-21",
-      fileName: "meeting_notes_aug_2024.docx",
-      year: "2024",
-      month: "August",
-      user: "Grace Turner",
-      status: "In Progress"
-    },
-    {
-      uploadDate: "2024-09-14",
-      fileName: "schedule_sep_2024.xlsx",
-      year: "2024",
-      month: "September",
-      user: "Chris Evans",
-      status: "Failed"
-    },
-    {
-      uploadDate: "2024-10-03",
-      fileName: "research_oct_2024.pdf",
-      year: "2024",
-      month: "October",
-      user: "Emily Clark",
-      status: "Pending"
-    }
-  ]
+
+function getData(): IFileUpload[] {
+  return []
 }
+
 
 // Define form schema using zod
 const FormSchema = z.object({
@@ -102,52 +52,85 @@ const FormSchema = z.object({
   file: z.instanceof(File, { message: "A file is required" }),
 });
 
-export default  function Page() {
-  const data =  getData()
-  const form = useForm({
-    resolver: zodResolver(FormSchema),
+export default function Page() {
+  
+  const [loading, setLoading] = useState(false);
+  const [progresses, setProgresses] = useState<Record<string, number>>({});
+  const [isUploading, setIsUploading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [uploadFile, setUploadFile] = useState<File[]>();
+  const [fileName, setfileName] = useState("")
+  const [data2, setData] = useState<IFileUpload[]>([]);
+  const data3 = getData();
+  const schema = z.object({
+    files: z.array(z.instanceof(File)),
+  });
+
+  type Schema = z.infer<typeof schema>;
+
+  const form = useForm<Schema>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      dateOfFile: null,
-      file: null,
+      files: [],
     },
   });
 
-  const { reset, handleSubmit } = form; // Destructure reset and handleSubmit from useForm
-
-  const onSubmit = async (data: any) => {
-    // Convert the date to a Unix timestamp (in seconds)
-    const formattedData = {
-      ...data,
-      dateOfFile: data.dateOfFile ? Math.floor(new Date(data.dateOfFile).getTime() / 1000) : null, // Convert to Unix timestamp (seconds)
-    };
-
-    // Create FormData object
-    const formData = new FormData();
-    formData.append('file', data.file); // Append file
-    if (formattedData.dateOfFile) {
-      formData.append('dateOfFile', formattedData.dateOfFile.toString()); // Append Unix timestamp
+  const { data, isLoading, isSuccess } = useUploadedAdminFiles();
+  async function onSubmit(data: Schema): Promise<void> {
+    
+    try {
+      const { files } = data; // Extract files array from data
+      console.log(files);
+      // Assume your upload logic is here; you can add actual upload code if needed.
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating async operation
+      // Your actual upload logic would replace the line above.
+      console.log(files);
+      // Optionally use toast or other UI feedback
+      // toast.success("Images uploaded successfully");
+    } catch (error) {
+      // Handle errors if any occur during upload
+      console.error("Upload failed", error);
+      // Optionally display an error message
+      // toast.error("Failed to upload images");
     }
+  }
 
-    // Log FormData contents for debugging
-    formData.forEach((value, key) => {
-    console.log(`${key}: ${value}`);
-  });
-
-  };
 
   return (
+
     <div className="justify-center  ">
+      
+      {/* {uploadFile && (
+        <UploadDialogForm
+          files={uploadFile}
+          onOpenChange={setOpen}
+          openState={open}
+          fileName={fileName}
+        />
+      )} */}
+
+      <Toaster />
       {/* Wrap your form with FormProvider */}
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="justify-center p-4">
-          <Dropzone name="file" onUpload={handleSubmit(onSubmit)} />
-        </form>
-      </FormProvider>
 
+     
+                    <FileUploader
+                      
+                      maxFileCount={1}
+                      maxSize={4 * 1024 * 1024}
+                      disabled={isUploading}
+                      progresses={progresses}
+                    />
+                  
+                {/* {uploadedFiles.length > 0 ? (
+                <UploadedFilesCard uploadedFiles={uploadedFiles} />
+              ) : null} */}
+              
+        
+
+      {/* <Button onClick={onClick} /> */}
       <div className="mx-auto py-10 ">
-      <DataTable columns={columnsForFileUpload} data={data} />
-    </div>
-
+        <DataTable isLoading={isLoading} columns={columnsForFileUpload} data={data?data.toReversed():[]} />
+      </div>
     </div>
   );
 }

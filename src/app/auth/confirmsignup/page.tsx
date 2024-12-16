@@ -7,7 +7,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleConfirmSignUp } from "@/lib/cognitoActions";
+import { handleConfirmSignUp } from "@/lib/aws/cognitoActions";
 import { Input } from "@/components/ui/input";
 import { Icons } from "@/components/icons";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";

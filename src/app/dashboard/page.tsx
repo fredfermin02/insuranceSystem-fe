@@ -6,9 +6,7 @@ export default function Page() {
       cookie: headers().get("cookie"),
     },
   };
-
-
-
+  
   return (
     <div className="flex gap-8 flex-wrap">
       <h1>DASHBOARD</h1>

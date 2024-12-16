@@ -54,6 +54,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "File Upload",
       url: "/dashboard/fileupload",
     })
+    sidebar.navMain[0].items.push({
+      title: "Payroll",
+      url: "/dashboard/payroll",
+    })
   }
 
   return (
