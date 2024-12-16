@@ -5,6 +5,7 @@ import "./globals.css";
 import ConfigureAmplifyClientSide from "./amplify-cognito-config";
 
 
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -31,9 +32,10 @@ export default function RootLayout({
       >
         <>
           
-          
+
             <ConfigureAmplifyClientSide/>
             {children}
+
           
         </>
         

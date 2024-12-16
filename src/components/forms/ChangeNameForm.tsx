@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import useAuthUser from "@/hooks/use-auth-user";
 import { useFormState } from "react-dom";
-import { handleUpdateUserAttribute } from "@/lib/cognitoActions";
+import { handleUpdateUserAttribute } from "@/lib/aws/cognitoActions";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "../ui/toaster";
 import { getErrorMessage } from "@/utils/get-error-message";

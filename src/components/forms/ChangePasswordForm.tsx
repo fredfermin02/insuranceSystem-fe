@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { passwordSchema } from "@/Schemas"
-import { handleUpdatePassword } from "@/lib/cognitoActions"
+import { handleUpdatePassword } from "@/lib/aws/cognitoActions"
 import { toast } from "@/hooks/use-toast"
 import { getErrorMessage } from "@/utils/get-error-message"
 

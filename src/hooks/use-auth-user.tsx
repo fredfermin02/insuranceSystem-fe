@@ -1,5 +1,6 @@
 "use client"
 import {
+  AuthSession,
     fetchAuthSession,
     fetchUserAttributes,
     getCurrentUser,
@@ -8,13 +9,16 @@ import {
   
   export default function useAuthUser() {
     const [user, setUser] = useState<Record<string, any>>();
-  
+    const [token, setToken] = useState<AuthSession>();
     useEffect(() => {
       async function getUser() {
         const session = await fetchAuthSession();
         if (!session.tokens) {
           return;
         }
+        console.log('session')
+        console.log(session.tokens.idToken?.toString());
+        
         const user = {
           ...(await getCurrentUser()),
           ...(await fetchUserAttributes()),
@@ -24,10 +28,11 @@ import {
         // @ts-ignore
         user.isAdmin = Boolean(groups && groups.includes("Admins"));
         setUser(user);
+        setToken(session)
       }
   
       getUser();
     }, []);
-  
-    return user;
+   
+    return user
   }

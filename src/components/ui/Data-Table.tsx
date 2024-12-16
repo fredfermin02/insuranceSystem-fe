@@ -38,13 +38,16 @@ import { EditButtonDropdown } from "../shared/table/EditButtonDropdown"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading: boolean
 }
 
 
 export function DataTable<TData , TValue>({
   columns,
   data,
+  isLoading
 }: DataTableProps<TData, TValue>) {
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -102,7 +105,7 @@ export function DataTable<TData , TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                 {isLoading?"Loading data...":" No results."}
                 </TableCell>
               </TableRow>
             )}

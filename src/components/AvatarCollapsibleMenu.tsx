@@ -3,7 +3,7 @@ import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { handleSignOut } from "@/lib/cognitoActions";
+import { handleSignOut } from "@/lib/aws/cognitoActions";
 import EditProfileSheet from "./editProfileSheet";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";

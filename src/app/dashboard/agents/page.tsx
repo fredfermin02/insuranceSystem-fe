@@ -1,11 +1,15 @@
+"use client";
 import { DataTable } from "@/components/ui/Data-Table";
 import React from "react";
-import {
-  columnsForAgents,
-} from "../../../components/shared/table/ColumnsForAgents";
-import { Button } from "@/components/ui/button";
+import { columnsForAgents } from "../../../components/shared/table/ColumnsForAgents";
 import { NewAgentButton } from "./components/newAgentButton";
 import { SaleData } from "@/interfaces/ISaleData";
+
+import { toast, Toaster } from "sonner";
+import agentsApi from "@/services/agentsApi";
+import { useQuery } from "@tanstack/react-query";
+import { useUserSession } from "@/Context/SessionProvider";
+import { FileUploader } from "../fileupload/components/UploadExcel";
 
 function getData(): SaleData[] {
   return [
@@ -134,7 +138,7 @@ function getData(): SaleData[] {
       suscribername: "Jack Hall",
       state: "GA",
       lives: 7,
-      rate: 6,      
+      rate: 6,
       commission: 68,
       commissionmonth: new Date(),
       blockreason: "None",
@@ -201,23 +205,40 @@ function getData(): SaleData[] {
       lives: 4,
       rate: 600,
       commission: 60,
-      commissionmonth: new Date,
+      commissionmonth: new Date(),
       blockreason: "Verification Needed",
     },
   ];
 }
 
-
-
 export default function page() {
-  const data = getData();
+  const session = useUserSession()
+  console.log('llamo al iniciar ')
+  console.log(session)
+  // const { data, isSuccess, isLoading, error } = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: agentsApi,
+  // });
+  const data2 = getData();
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return console.log(error);
+
   return (
-    <div >
-      <div className="  ">
-        <div className="flex place-self-end py-5">
-          <NewAgentButton />
+    <div>
+      <div>
+        <div className="py-5">
+        <NewAgentButton />
         </div>
-        <DataTable columns={columnsForAgents} data={data} />
+      
+      </div>
+      <Toaster />
+      
+      <div className="  ">
+      <FileUploader/>
+        <div className="flex place-self-end py-5">
+          
+        </div>
+        <DataTable isLoading={false} columns={columnsForAgents} data={data2} />
       </div>
     </div>
   );

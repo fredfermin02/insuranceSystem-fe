@@ -1,0 +1,1 @@
+export const NEXT_PUBLIC_API_GATEWAY_URL = process.env.AWS_MAIN_APIGATEWAY_URL

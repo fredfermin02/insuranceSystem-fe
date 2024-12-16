@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
  
 import { Button } from "@/components/ui/button"
+import { FileUploadActionButtonDropdown } from "./FileUploadActionButtonDropdown";
+import { Row } from "react-day-picker";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,30 +18,63 @@ export type FileUpload = {
   status: string,
 };
 
+export interface IFileUpload {
+  id: number;
+  file_name: string;
+  agent_id: string;
+  uploaded_date: string;
+  month: number;
+  year: number;
+  published: boolean;
+}
 
 
-export const columnsForFileUpload: ColumnDef<FileUpload>[] = [
+export const columnsForFileUpload: ColumnDef<IFileUpload>[] = [
   {
-    accessorKey: "uploadDate",
-    header: "Upload Date",
+    accessorKey: "id",
+    header: "File Id",
   },
   {
-    accessorKey: "fileName",
+    accessorKey: "file_name",
     header: "File Name",
+  },
+  {
+    accessorKey: "agent_name",
+    header: "Agent Name",
+  },
+  {
+    accessorKey: "uploaded_date",
+    header: "Uploaded Date",
+  },
+  {
+    accessorKey: "month",
+    header: "Year",
   },
   {
     accessorKey: "year",
     header: "Year",
   },  
   {
-    accessorKey: "user",
-    header: "Uploaded By",
-    
+    accessorKey: "published",
+    header: "Status",
+    cell: ({ row }) => {
+      const isPublished = row.getValue("published"); // Access the value
+      return <div>{isPublished ? "Yes" : "No"}</div>;
+    }
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  }
+    id: "actions",
+    cell: ({ row }) => {
+      
+
+      return (
+        <div className="justify-center">
+          <FileUploadActionButtonDropdown/>
+        </div>
+        
+      )
+    },
+  } 
 ]
 
 // {
